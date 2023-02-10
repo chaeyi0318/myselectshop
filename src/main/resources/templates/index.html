@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <link th:href="@{/style.css}" rel="stylesheet">
+  <script type="text/javascript" th:src="@{/basic.js}"></script>
+  <title>나만의 셀렉샵</title>
+</head>
+<body>
+<div class="header">
+  Select Shop
+</div>
+<div class="nav">
+  <div class="nav-see active">
+    모아보기
+  </div>
+  <div class="nav-search">
+    탐색하기
+  </div>
+</div>
+<div id="see-area">
+  <div id="product-container">
+    <div class="product-card" onclick="window.location.href='https://spartacodingclub.kr'">
+      <div class="card-header">
+        <img src="https://shopping-phinf.pstatic.net/main_2085830/20858302247.20200602150427.jpg?type=f300"
+             alt="">
+      </div>
+      <div class="card-body">
+        <div class="title">
+          Apple 아이폰 11 128GB [자급제]
+        </div>
+        <div class="lprice">
+          <span>919,990</span>원
+        </div>
+        <div class="isgood">
+          최저가
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="search-area">
+  <div>
+    <input type="text" id="query">
+  </div>
+  <div id="search-result-box">
+    <div class="search-itemDto">
+      <div class="search-itemDto-left">
+        <img src="https://shopping-phinf.pstatic.net/main_2399616/23996167522.20200922132620.jpg?type=f300" alt="">
+      </div>
+      <div class="search-itemDto-center">
+        <div>Apple 아이맥 27형 2020년형 (MXWT2KH/A)</div>
+        <div class="price">
+          2,289,780
+          <span class="unit">원</span>
+        </div>
+      </div>
+      <div class="search-itemDto-right">
+        <img src="/images/icon-save.png" alt="" onclick='addProduct()'>
+      </div>
+    </div>
+  </div>
+  <div id="container" class="popup-container">
+    <div class="popup">
+      <button id="close" class="close">
+        X
+      </button>
+      <h1>⏰최저가 설정하기</h1>
+      <p>최저가를 설정해두면 선택하신 상품의 최저가가 떴을 때<br/> 표시해드려요!</p>
+      <div>
+        <input type="text" id="myprice" placeholder="200,000">원
+      </div>
+      <button class="cta" onclick="setMyprice()">설정하기</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
