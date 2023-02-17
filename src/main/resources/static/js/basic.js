@@ -1,32 +1,8 @@
 let targetId;
-
+let host = 'http://' + window.location.host;
 $(document).ready(function () {
     // cookie 여부 확인하여 로그인 확인
     const auth = getToken();
-
-
-    // 처음 로딩 시 사용자 정보 가져오기 (이름 및 폴더)
-    if(auth !== '') {
-        $.ajax({
-            type: 'GET',
-            url: `/api/user-folder`,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", auth);
-            },
-        }).done(function (fragment) {
-            // console.log(fragment);
-            $('#fragment').replaceWith(fragment);
-        });
-    }
-
-    if(auth !== '') {
-        $('#username').text('수강생');
-        $('#login-true').show();
-        $('#login-false').hide();
-    } else {
-        $('#login-false').show();
-        $('#login-true').hide();
-    }
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
     $('#query').on('keypress', function (e) {
@@ -58,8 +34,58 @@ $(document).ready(function () {
     $('#see-area').show();
     $('#search-area').hide();
 
-    showProduct();
+    // 처음 로딩 시 사용자 정보 가져오기 (이름 및 폴더)
+    if (auth !== '') {
+        // 로그인한 유저 이름
+        $.ajax({
+            type: 'GET',
+            url: `/api/user-info`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            success: function (response) {
+                if (response === 'fail') {
+                    logout();
+                    window.location.reload();
+                } else {
+                    $('#username').text(response);
+                }
+            },
+            error(error, status, request) {
+                console.error(error);
+                logout();
+                window.location.href = host + "/api/user/login-page";
+            }
+        });
+
+        // 로그인한 유저의 폴더
+        $.ajax({
+            type: 'GET',
+            url: `/api/user-folder`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            error(error) {
+                console.error(error);
+                logout();
+                window.location.href = host + "/api/user/login-page";
+            }
+        }).done(function (fragment) {
+            // console.log(fragment);
+            $('#fragment').replaceWith(fragment);
+        });
+
+        $('#login-true').show();
+        $('#login-false').hide();
+
+        showProduct();
+    } else {
+        $('#login-false').show();
+        $('#login-true').hide();
+    }
+
 })
+
 
 
 function numberWithCommas(x) {
@@ -93,6 +119,11 @@ function execSearch() {
                 let tempHtml = addHTML(itemDto);
                 $('#search-result-box').append(tempHtml);
             }
+        },
+        error(error, status, request) {
+            console.error(error);
+            logout();
+            window.location.href = host + "/api/user/login-page";
         }
     })
 
@@ -144,6 +175,16 @@ function addProduct(itemDto) {
             // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정
             $('#container').addClass('active');
             targetId = response.id;
+        },
+        error(error, status, request) {
+            console.log(error)
+            if(error.status === 403){
+                window.location.href = host + "/api/user/forbidden";
+            }else {
+                console.error(error);
+                logout();
+                window.location.href = host + "/api/user/login-page";
+            }
         }
     })
 }
@@ -187,10 +228,14 @@ function showProduct(folderId = null) {
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("Authorization", auth);
                 $('#product-container').html('상품 불러오는 중...');
+            },
+            error(error, status, request) {
+                console.error(error);
+                logout();
+                window.location.href = host + "/api/user/login-page";
             }
         },
         callback: function(data, pagination) {
-            console.log(data);
             $('#product-container').empty();
             for (let i = 0; i < data.length; i++) {
                 let product = data[i];
@@ -246,7 +291,7 @@ function addFolder() {
         console.log(e);
         return;
     }
-    console.log('folderNames',folderNames);
+
     $.ajax({
         type: "POST",
         url: `/api/folders`,
@@ -261,6 +306,11 @@ function addFolder() {
             $('#container2').removeClass('active');
             alert('성공적으로 등록되었습니다.');
             window.location.reload();
+        },
+        error(error, status, request) {
+            console.error(error);
+            logout();
+            window.location.href = host + "/api/user/login-page";
         }
     })
 }
@@ -339,6 +389,11 @@ function addInputForProductToFolder(productId, button) {
                     window.location.reload();
                 });
             });
+        },
+        error(error, status, request) {
+            console.error(error);
+            logout();
+            window.location.href = host + "/api/user/login-page";
         }
     });
 }
@@ -379,21 +434,31 @@ function setMyprice() {
             xhr.setRequestHeader("Authorization", auth);
         },
         success: function (response) {
+
+
+
             // 4. 모달을 종료한다. $('#container').removeClass('active');
             $('#container').removeClass('active');
             // 5. 성공적으로 등록되었음을 알리는 alert를 띄운다.
             alert('성공적으로 등록되었습니다.');
             // 6. 창을 새로고침한다. window.location.reload();
             window.location.reload();
+        },
+        error(error, status, request) {
+            console.error(error);
+            logout();
+            window.location.href = host + "/api/user/login-page";
         }
     })
 }
 
-function logout() {
+function logout(check) {
     // 토큰 값 ''으로 덮어쓰기
     document.cookie =
         'Authorization' + '=' + '' + ';path=/';
-    window.location.reload();
+    if(check) {
+        window.location.reload();
+    }
 }
 
 function  getToken() {
@@ -407,5 +472,11 @@ function  getToken() {
         if(end === -1)end = cookieData.length;
         auth = cookieData.substring(cookie, end);
     }
+
+    // kakao 로그인 사용한 경우 Bearer 추가
+    if(auth.indexOf('Bearer') === -1 && auth !== ''){
+        auth = 'Bearer ' + auth;
+    }
+
     return auth;
 }

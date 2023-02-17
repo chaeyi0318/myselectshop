@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-    <link th:href="@{/style.css}" rel="stylesheet">
+    <link type="text/css" th:href="@{/css/style.css}" rel="stylesheet">
     <meta charset="UTF-8">
     <title>회원가입 페이지</title>
     <script>
@@ -18,7 +18,7 @@
             var box = document.getElementById("admin-token");
 
             // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
+            if (checkBox.checked == true){
                 box.style.display = "block";
             } else {
                 box.style.display = "none";
@@ -42,8 +42,7 @@
 
         <div>
             <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자
-            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box"
-                   style="display:none">
+            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
         </div>
         <button id="login-id-submit">회원 가입</button>
     </form>

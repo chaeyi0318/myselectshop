@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-    <link th:href="@{/style.css}" rel="stylesheet">
+    <link type="text/css" th:href="@{/css/style.css}" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
 
 
-    <script type="text/javascript" th:src="@{/basic.js}"></script>
+    <script type="text/javascript" th:src="@{/js/basic.js}"></script>
     <title>나만의 셀렉샵</title>
 </head>
 <body>
@@ -28,7 +28,7 @@
         <div id="header-title-select-shop">
             Select Shop
         </div>
-        <a id="login-text" href="javascript:logout()">
+        <a id="login-text" href="javascript:logout('check')">
             로그아웃
         </a>
     </div>
@@ -39,7 +39,7 @@
         <a id="sign-text" href="/api/user/signup">
             회원가입
         </a>
-        <a id="login-text" href="/api/user/login">
+        <a id="login-text" href="/api/user/login-page">
             로그인
         </a>
     </div>

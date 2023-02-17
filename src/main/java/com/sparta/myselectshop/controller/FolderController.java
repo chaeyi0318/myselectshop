@@ -3,12 +3,13 @@ package com.sparta.myselectshop.controller;
 import com.sparta.myselectshop.dto.FolderRequestDto;
 import com.sparta.myselectshop.entity.Folder;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -21,20 +22,27 @@ public class FolderController {
     @PostMapping("/folders")
     public List<Folder> addFolders(
             @RequestBody FolderRequestDto folderRequestDto,
-            HttpServletRequest request
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
 
         List<String> folderNames = folderRequestDto.getFolderNames();
 
-        return folderService.addFolders(folderNames, request);
+        System.out.println("======================================================");
+        System.out.println("user.getUsername() = " + userDetails.getUsername());
+        System.out.println("user.getUser() = " + userDetails.getUser());
+        System.out.println("user.getUser().getPassword() = " + userDetails.getUser().getPassword());
+        System.out.println("user.getUser().getId() = " + userDetails.getUser().getId());
+        System.out.println("======================================================");
+
+        return folderService.addFolders(folderNames, userDetails.getUsername());
     }
 
     // 회원이 등록한 모든 폴더 조회
     @GetMapping("/folders")
     public List<Folder> getFolders(
-            HttpServletRequest request
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return folderService.getFolders(request);
+        return folderService.getFolders(userDetails.getUser());
     }
 
     // 회원이 등록한 폴더 내 모든 상품 조회
@@ -45,7 +53,7 @@ public class FolderController {
             @RequestParam int size,
             @RequestParam String sortBy,
             @RequestParam boolean isAsc,
-            HttpServletRequest request
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         return folderService.getProductsInFolder(
                 folderId,
@@ -53,8 +61,7 @@ public class FolderController {
                 size,
                 sortBy,
                 isAsc,
-                request
+                userDetails.getUser()
         );
     }
-
 }

@@ -8,15 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-    <link th:href="@{/style.css}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" >
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
 </head>
 <body>
 <div id="login-form">
     <div id="login-title">Log into Select Shop</div>
-    <button id="login-kakao-btn"
-            onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=&redirect_uri=http://localhost:8080/api/user/kakao/callback&response_type=code'">
+    <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=77f4d486c29f0d9e4c0a677991b6bf96&redirect_uri=http://localhost:8080/api/user/kakao/callback&response_type=code'">
         카카오로 로그인하기
     </button>
     <button id="login-id-btn" onclick="location.href='/api/user/signup'">
@@ -35,7 +34,7 @@
 </body>
 <script>
     const href = location.href;
-    const queryString = href.substring(href.indexOf("?") + 1)
+    const queryString = href.substring(href.indexOf("?")+1)
     if (queryString === 'error') {
         const errorDiv = document.getElementById('login-failed');
         errorDiv.style.display = 'block';
@@ -49,7 +48,7 @@
         if (username == '') {
             alert('ID를 입력해주세요');
             return;
-        } else if (password == '') {
+        } else if(password == '') {
             alert('비밀번호를 입력해주세요');
             return;
         }
@@ -60,7 +59,7 @@
             contentType: "application/json",
             data: JSON.stringify({username: username, password: password}),
             success: function (response, status, xhr) {
-                if (response === 'success') {
+                if(response === 'success') {
                     let host = window.location.host;
                     let url = host + '/api/shop';
 
