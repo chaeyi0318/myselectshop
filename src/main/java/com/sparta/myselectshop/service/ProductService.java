@@ -27,10 +27,10 @@ public class ProductService {
     private final FolderRepository folderRepository;
     private final ProductRepository productRepository;
 
+    public static final int MIN_MY_PRICE = 100;
+
     @Transactional
     public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
-        System.out.println("ProductService.createProduct");
-        System.out.println("user.getUsername() = " + user.getUsername());
 
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
         Product product = productRepository.saveAndFlush(new Product(requestDto, user.getId()));
@@ -62,6 +62,11 @@ public class ProductService {
 
     @Transactional
     public Long updateProduct(Long id, ProductMypriceRequestDto requestDto, User user) {
+
+        int myprice = requestDto.getMyprice();
+        if (myprice < MIN_MY_PRICE) {
+            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + " 원 이상으로 설정해 주세요.");
+        }
 
         Product product = productRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                 () -> new NullPointerException("해당 상품은 존재하지 않습니다.")

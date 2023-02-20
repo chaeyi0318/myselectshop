@@ -1,5 +1,6 @@
 package com.sparta.myselectshop.dto;
 
+import com.sparta.myselectshop.naver.dto.ItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,11 @@ public class ProductRequestDto {
     private String link;
     // 관심상품의 최저가
     private int lprice;
+
+    public ProductRequestDto(ItemDto itemDto) {
+        this.title = itemDto.getTitle();
+        this.image = itemDto.getImage();
+        this.link = itemDto.getLink();
+        this.lprice = itemDto.getLprice();
+    }
 }
